@@ -312,12 +312,12 @@ ul { list-style: none; }
   display: flex;
   align-items: center; gap: 8px;
   width: 100%;
-  padding: 11px 16px;
+  padding: 8px 10px;
   background: var(--bg-elevated);
   color: var(--accent);
   border: 1px solid var(--border-hover);
   border-radius: var(--radius);
-  font-size: 0.88rem;
+  font-size: 0.8rem;
   font-weight: 600;
   transition: var(--transition);
   justify-content: center;
@@ -379,8 +379,8 @@ ul { list-style: none; }
    ============================================= */
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
 }
 
 .product-card {
@@ -423,7 +423,7 @@ ul { list-style: none; }
 
 .product-img-wrap {
   position: relative;
-  aspect-ratio: 1;
+  aspect-ratio: 4 / 5;
   overflow: hidden;
   background: var(--bg-elevated);
 }
@@ -461,7 +461,7 @@ ul { list-style: none; }
 .product-card:hover .btn-quick-view { transform: translateY(0); }
 
 .product-info {
-  padding: 16px;
+  padding: 10px;
 }
 
 .product-category {
@@ -473,9 +473,9 @@ ul { list-style: none; }
 }
 
 .product-name {
-  font-size: 0.95rem;
+  font-size: 0.82rem;
   font-weight: 600;
-  margin: 6px 0 8px;
+  margin: 4px 0 4px;
   line-height: 1.3;
   color: var(--text-primary);
 }
@@ -490,7 +490,7 @@ ul { list-style: none; }
 }
 
 .stars { color: #f59e0b; font-size: 0.8rem; letter-spacing: 1px; }
-.review-count { color: var(--text-muted); font-size: 0.78rem; }
+.review-count { color: var(--text-muted); font-size: 0.7rem; }
 
 .product-pricing {
   display: flex;
@@ -500,7 +500,7 @@ ul { list-style: none; }
 }
 
 .price-current {
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   font-weight: 700;
   color: var(--text-primary);
 }
@@ -710,11 +710,14 @@ ul { list-style: none; }
   .section-title { font-size: 1.4rem; }
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }
   .footer-bottom { flex-direction: column; align-items: flex-start; }
-  .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .products-grid { grid-template-columns: repeat(3, minmax(110px, 1fr)); gap: 8px; }
+  .product-name { font-size: 0.78rem; }
+  .price-current { font-size: 0.85rem; }
+  .stars { font-size: 0.7rem; }
 }
 
 @media (max-width: 480px) {
-  .products-grid { grid-template-columns: 1fr; }
+  .products-grid { grid-template-columns: repeat(3, minmax(100px, 1fr)); gap: 6px; }
   .container { padding: 0 16px; }
 }
 

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login – SRG Mart</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/auth.css" />
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-brand">
+        <div class="brand-icon">⚡</div>
+        <span class="brand-name">SRG<span>Mart</span></span>
+      </a>
+      <nav class="nav-menu" id="nav-menu">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="products.html" class="nav-link">Products</a>
+      </nav>
+      <div class="nav-actions"></div>
+    </div>
+  </nav>
+
+  <main class="page-offset">
+    <section class="section">
+      <div class="container">
+        <div class="auth-wrap">
+          <div class="auth-tabs">
+            <button id="tab-login" class="auth-tab active">Login</button>
+            <button id="tab-register" class="auth-tab">New User?</button>
+          </div>
+
+          <div class="auth-card">
+            <form id="login-form" class="auth-form">
+              <label>Email <input type="email" id="login-email" required autocomplete="email" /></label>
+              <label>Password <input type="password" id="login-password" required autocomplete="current-password" /></label>
+              <button type="submit" class="btn-primary">Login</button>
+            </form>
+
+            <form id="register-form" class="auth-form" style="display:none;">
+              <label>Email <input type="email" id="reg-email" required autocomplete="email" /></label>
+              <label>Password <input type="password" id="reg-password" required autocomplete="new-password" /></label>
+              <label>Confirm Password <input type="password" id="reg-password2" required autocomplete="new-password" /></label>
+              <button type="submit" class="btn-primary">Create Account</button>
+            </form>
+          </div>
+          <p class="auth-note">Tip: Admin login: <code>vermaraj@gmail.com</code> / <code>admin@69</code></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/auth.js"></script>
+</body>
+<!-- Keep UI consistent -->
+</html>

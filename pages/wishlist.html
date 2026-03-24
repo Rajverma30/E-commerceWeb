@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wishlist – SRG Mart</title>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-brand">
+        <div class="brand-icon">⚡</div>
+        <span class="brand-name">SRG<span>Mart</span></span>
+      </a>
+      <nav class="nav-menu" id="nav-menu">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="products.html" class="nav-link">Products</a>
+        <a href="about.html" class="nav-link">About Us</a>
+        <a href="careers.html" class="nav-link">Careers</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="cart.html" class="cart-icon-wrap" title="Cart">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>
+          <span class="cart-badge">0</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page-offset">
+    <section class="section">
+      <div class="container">
+        <h1 class="section-title">Your Wishlist</h1>
+        <div class="products-grid" id="wishlist-grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../js/main.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const grid = document.getElementById("wishlist-grid");
+      const ids = getWishlist();
+      const prods = getAllProducts().filter(p => ids.includes(p.id));
+      if (prods.length === 0) {
+        grid.innerHTML = '<div class="admin-panel">No items in wishlist.</div>';
+        return;
+      }
+      grid.innerHTML = prods.map(p => renderProductCard(p, "../")).join("");
+    });
+  </script>
+</body>
+</html>

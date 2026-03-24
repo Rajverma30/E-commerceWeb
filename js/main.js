@@ -466,6 +466,16 @@ function renderAuthControls() {
   const existingContainer = document.getElementById("admin-actions");
   if (existingContainer) existingContainer.remove();
 
+  // Ensure wishlist icon exists (before admin/user controls)
+  if (!document.querySelector(".wish-icon-wrap")) {
+    const wish = document.createElement("a");
+    wish.href = (window.location.pathname.includes("/pages/") ? "" : "pages/") + "wishlist.html";
+    wish.className = "wish-icon-wrap";
+    wish.title = "Wishlist";
+    wish.innerHTML = `<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg>`;
+    navActions.prepend(wish);
+  }
+
   const adminWrap = document.createElement("div");
   adminWrap.id = "admin-actions";
   adminWrap.className = "admin-actions";
@@ -476,14 +486,22 @@ function renderAuthControls() {
     if (isAdminLoggedIn()) {
       adminWrap.innerHTML = `
         <a href="${baseToPages}admin.html" class="admin-btn admin-dashboard-btn">Dashboard</a>
-        <button type="button" class="admin-btn admin-logout-btn" id="admin-logout-btn">Logout</button>
+        <div class="user-avatar" id="user-avatar"></div>
+        <div class="user-menu" id="user-menu" style="display:none;">
+          <a href="${baseToPages}orders.html">My Orders</a>
+          <button type="button" class="admin-logout-btn" id="admin-logout-btn">Logout</button>
+        </div>
       `;
     } else {
       const user = getCurrentUser();
       adminWrap.innerHTML = `
-        <a href="${baseToPages}orders.html" class="admin-btn">My Orders</a>
-        <span class="admin-btn" style="pointer-events:none;opacity:0.9;">${user?.email || "User"}</span>
-        <button type="button" class="admin-btn admin-logout-btn" id="admin-logout-btn">Logout</button>
+        <div class="user-avatar" id="user-avatar"></div>
+        <div class="user-menu" id="user-menu" style="display:none;">
+          <div class="user-menu-email">${user?.email || ""}</div>
+          <a href="${baseToPages}orders.html">My Orders</a>
+          <a href="${baseToPages}wishlist.html">Wishlist</a>
+          <button type="button" class="admin-logout-btn" id="admin-logout-btn">Logout</button>
+        </div>
       `;
     }
   } else {
@@ -491,6 +509,25 @@ function renderAuthControls() {
   }
 
   navActions.prepend(adminWrap);
+
+  // Initialize avatar initial and dropdown toggling
+  const avatarEl = document.getElementById("user-avatar");
+  const menuEl = document.getElementById("user-menu");
+  if (avatarEl && menuEl) {
+    const user = getCurrentUser();
+    const initial = (user?.email || "U").trim().charAt(0).toUpperCase();
+    avatarEl.textContent = initial;
+    const toggleMenu = (e) => {
+      e.stopPropagation();
+      menuEl.style.display = menuEl.style.display === "none" ? "block" : "none";
+    };
+    avatarEl.addEventListener("click", toggleMenu);
+    document.addEventListener("click", (e) => {
+      if (!menuEl.contains(e.target) && e.target !== avatarEl) {
+        menuEl.style.display = "none";
+      }
+    });
+  }
 
   const logoutBtn = document.getElementById("admin-logout-btn");
   if (logoutBtn) {

@@ -466,6 +466,10 @@ function renderAuthControls() {
   const existingContainer = document.getElementById("admin-actions");
   if (existingContainer) existingContainer.remove();
 
+  // Remove old static account/login block from page templates to avoid duplicate auth UI.
+  const staticAccountLink = navActions.querySelector('a.nav-action-btn[href*="login.html"]');
+  if (staticAccountLink) staticAccountLink.remove();
+
   // Ensure wishlist icon exists (before admin/user controls)
   if (!document.querySelector(".wish-icon-wrap")) {
     const wish = document.createElement("a");
@@ -484,10 +488,13 @@ function renderAuthControls() {
 
   if (isLoggedIn()) {
     if (isAdminLoggedIn()) {
+      const user = getCurrentUser();
       adminWrap.innerHTML = `
         <a href="${baseToPages}admin.html" class="admin-btn admin-dashboard-btn">Dashboard</a>
         <div class="user-avatar" id="user-avatar"></div>
         <div class="user-menu" id="user-menu" style="display:none;">
+          <div class="user-menu-email">${user?.email || ""}</div>
+          <div class="user-menu-email">Role: Admin</div>
           <a href="${baseToPages}orders.html">My Orders</a>
           <button type="button" class="admin-logout-btn" id="admin-logout-btn">Logout</button>
         </div>
@@ -498,6 +505,7 @@ function renderAuthControls() {
         <div class="user-avatar" id="user-avatar"></div>
         <div class="user-menu" id="user-menu" style="display:none;">
           <div class="user-menu-email">${user?.email || ""}</div>
+          <div class="user-menu-email">Role: Customer</div>
           <a href="${baseToPages}orders.html">My Orders</a>
           <a href="${baseToPages}wishlist.html">Wishlist</a>
           <button type="button" class="admin-logout-btn" id="admin-logout-btn">Logout</button>

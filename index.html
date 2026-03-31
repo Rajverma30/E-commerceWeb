@@ -317,14 +317,6 @@
       }
     });
 
-    function updateCartBadge() {
-      try {
-        const cart = JSON.parse(localStorage.getItem("srgmart_cart") || "[]");
-        const total = cart.reduce((s, i) => s + (i.qty || 1), 0);
-        const badge = document.getElementById("cart-count");
-        if (badge) badge.textContent = total;
-      } catch(e) {}
-    }
   </script>
 </body>
 </html>

@@ -518,6 +518,28 @@ function renderAuthControls() {
 
   navActions.prepend(adminWrap);
 
+  // Add account shortcuts inside the 3-line mobile menu.
+  const navMenu = document.getElementById("nav-menu");
+  if (navMenu) {
+    const existingMobileLinks = navMenu.querySelector(".mobile-user-links");
+    if (existingMobileLinks) existingMobileLinks.remove();
+
+    const mobileLinks = document.createElement("div");
+    mobileLinks.className = "mobile-user-links";
+    if (isLoggedIn()) {
+      mobileLinks.innerHTML = `
+        <a href="${baseToPages}orders.html" class="nav-link">Orders</a>
+        <a href="${baseToPages}wishlist.html" class="nav-link">Wishlist</a>
+      `;
+      if (isAdminLoggedIn()) {
+        mobileLinks.innerHTML += `<a href="${baseToPages}admin.html" class="nav-link">Dashboard</a>`;
+      }
+    } else {
+      mobileLinks.innerHTML = `<a href="${baseToPages}login.html" class="nav-link">Login</a>`;
+    }
+    navMenu.appendChild(mobileLinks);
+  }
+
   // Initialize avatar initial and dropdown toggling
   const avatarEl = document.getElementById("user-avatar");
   const menuEl = document.getElementById("user-menu");

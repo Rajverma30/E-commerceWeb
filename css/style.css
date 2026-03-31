@@ -156,6 +156,8 @@ ul { list-style: none; }
 .nav-link:hover, .nav-link.active { color: var(--text-primary); background: var(--bg-secondary); }
 .nav-link.active { color: var(--accent); }
 
+.mobile-user-links { display: none; }
+
 .nav-actions {
   display: flex;
   align-items: center;
@@ -898,6 +900,14 @@ ul { list-style: none; }
     padding: 12px 16px;
     box-shadow: var(--shadow);
     z-index: 999;
+  }
+  .mobile-user-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
   }
   .mobile-menu-toggle { display: flex; }
   .products-grid { grid-template-columns: repeat(2, 1fr); }

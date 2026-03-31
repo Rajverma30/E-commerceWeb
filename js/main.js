@@ -635,38 +635,46 @@ function showToast(message, type = "success") {
 // Render product card
 function renderProductCard(product, basePath = "") {
   const discount = getDiscount(product.originalPrice, product.price);
-  const inWish = isInWishlist && isInWishlist(product.id);
+  const badgeColor = product.badge === "Hot Deal" || product.badge === "Sale" ? "orange" : (product.badge === "New" ? "green" : "");
+  const starsHtml = renderStarsHTML(product.rating);
   return `
-    <div class="product-card" data-id="${product.id}">
-      ${product.badge ? `<span class="product-badge">${product.badge}</span>` : ""}
+    <div class="product-card" data-id="${product.id}" onclick="window.location='${basePath}pages/product.html?id=${product.id}'">
       <div class="product-img-wrap">
+        ${product.badge ? `<span class="product-badge ${badgeColor}">${product.badge}</span>` : ""}
+        <button class="product-wish-btn" onclick="event.stopPropagation(); toggleWishlist(${product.id})" title="Add to Wishlist">♡</button>
         <img src="${product.image}" alt="${product.name}" loading="lazy" />
-        <div class="product-overlay">
-          <a href="${basePath}pages/product.html?id=${product.id}" class="btn-quick-view">View Details</a>
-        </div>
       </div>
       <div class="product-info">
-        <span class="product-category">${product.category}</span>
-        <h3 class="product-name"><a href="${basePath}pages/product.html?id=${product.id}">${product.name}</a></h3>
+        <div class="product-name">${product.name}</div>
         <div class="product-rating">
-          <span class="stars">${renderStars(product.rating)}</span>
+          <div class="stars">${starsHtml}</div>
+          <span class="rating-num">${product.rating}</span>
           <span class="review-count">(${product.reviews.toLocaleString()})</span>
         </div>
-        <div class="product-pricing">
-          <span class="price-current">${formatPrice(product.price)}</span>
-          <span class="price-original">${formatPrice(product.originalPrice)}</span>
-          <span class="price-discount">${discount}% off</span>
+        <div class="product-price-block">
+          <span class="product-price">${formatPrice(product.price)}</span>
+          <span class="product-original-price">${formatPrice(product.originalPrice)}</span>
+          <span class="product-discount">-${discount}%</span>
         </div>
-        <button class="btn-add-cart" onclick="addToCart(${product.id})">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>
-          Add to Cart
-        </button>
-        <button class="btn-add-cart" style="margin-top:8px;" onclick="toggleWishlist(${product.id})">
-          ${inWish ? "♥ In Wishlist" : "♡ Add to Wishlist"}
+      </div>
+      <div class="product-card-footer">
+        <button class="btn-card-add" onclick="event.stopPropagation(); addToCart(${product.id})">
+          🛒 Add to Cart
         </button>
       </div>
     </div>
   `;
+}
+
+function renderStarsHTML(rating) {
+  const full = Math.floor(rating);
+  const half = rating % 1 >= 0.5 ? 1 : 0;
+  const empty = 5 - full - half;
+  let html = "";
+  for(let i=0;i<full;i++) html += '<span class="star">★</span>';
+  if(half) html += '<span class="star">½</span>';
+  for(let i=0;i<empty;i++) html += '<span class="star empty">★</span>';
+  return html;
 }
 
 // Mobile menu toggle

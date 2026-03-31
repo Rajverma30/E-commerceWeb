@@ -154,6 +154,17 @@ function initProductsPage() {
 }
 
 // ---- Product Detail Page ----
+function renderStarsHTMLDetail(rating) {
+  const full = Math.floor(rating);
+  const half = rating % 1 >= 0.5 ? 1 : 0;
+  const empty = 5 - full - half;
+  let html = "";
+  for(let i=0;i<full;i++) html += '<span class="detail-star">★</span>';
+  if(half) html += '<span class="detail-star">½</span>';
+  for(let i=0;i<empty;i++) html += '<span class="detail-star empty">★</span>';
+  return html;
+}
+
 function initProductDetailPage() {
   const urlParams = new URLSearchParams(window.location.search);
   const productId = urlParams.get("id");
@@ -180,44 +191,38 @@ function initProductDetailPage() {
     </div>
     <div class="product-detail-grid">
       <div class="product-gallery">
-        <div class="gallery-main">
-          <img id="main-product-img" src="${product.images[0]}" alt="${product.name}" />
-          ${product.badge ? `<span class="product-badge large">${product.badge}</span>` : ""}
-          <div class="gallery-zoom-hint">🔍 Hover to zoom</div>
-        </div>
-        <div class="gallery-thumbs">
+        <img id="main-product-img" class="product-main-img" src="${product.images[0]}" alt="${product.name}" />
+        <div class="product-thumbnails">
           ${product.images.map((img, i) => `
-            <div class="thumb ${i === 0 ? "active" : ""}" onclick="switchImage(${i})">
-              <img src="${img}" alt="View ${i + 1}" />
-            </div>
+            <img src="${img}" class="product-thumb ${i === 0 ? 'active' : ''}" alt="View ${i+1}" onclick="switchImage(${i})" />
           `).join("")}
         </div>
       </div>
-      <div class="product-detail-info">
-        <div class="product-detail-category">${product.category.toUpperCase()}</div>
+      <div class="product-detail-right">
         <h1 class="product-detail-name">${product.name}</h1>
-        <div class="product-detail-rating">
-          <span class="stars-lg">${renderStars(product.rating)}</span>
-          <span class="rating-number">${product.rating}</span>
-          <span class="review-count-lg">${product.reviews.toLocaleString()} reviews</span>
+        <div class="detail-rating-row">
+          <div class="detail-stars">${renderStarsHTMLDetail(product.rating)}</div>
+          <span class="detail-rating-num">${product.rating} ★</span>
+          <span class="detail-reviews">${product.reviews.toLocaleString()} ratings</span>
         </div>
-        <div class="product-detail-pricing">
-          <span class="detail-price">${formatPrice(product.price)}</span>
-          <span class="detail-original">${formatPrice(product.originalPrice)}</span>
-          <span class="detail-badge">${discount}% OFF</span>
-        </div>
-        <p class="savings-text">You save ${formatPrice(product.originalPrice - product.price)}</p>
+
         <div class="product-detail-desc">${product.description}</div>
+        <div class="detail-price-block">
+          <div class="detail-price-row">
+            <span class="detail-price">${formatPrice(product.price)}</span>
+            <span class="detail-original">${formatPrice(product.originalPrice)}</span>
+            <span class="detail-discount">-${discount}% OFF</span>
+          </div>
+          <div class="savings-text">You save ${formatPrice(product.originalPrice - product.price)} on this order</div>
+        </div>
+        <div class="stock-status">In Stock</div>
         <div class="product-specs">
           <h4>Key Specifications</h4>
-          <div class="specs-grid">
+          <table class="specs-table">
             ${Object.entries(product.specs).map(([key, val]) => `
-              <div class="spec-item">
-                <span class="spec-key">${key}</span>
-                <span class="spec-val">${val}</span>
-              </div>
+              <tr><td>${key}</td><td>${val}</td></tr>
             `).join("")}
-          </div>
+          </table>
         </div>
         <div class="product-detail-actions">
           <div class="qty-selector">
@@ -229,10 +234,9 @@ function initProductDetailPage() {
             </div>
           </div>
           <button class="btn-add-cart-lg" onclick="addToCartFromDetail()">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/></svg>
-            Add to Cart
+            🛒 Add to Cart
           </button>
-          <a href="../pages/cart.html" class="btn-buy-now" onclick="addToCartFromDetail()">Buy Now</a>
+          <a href="../pages/cart.html" class="btn-buy-now" onclick="addToCartFromDetail()">⚡ Buy Now</a>
         </div>
         <div class="product-perks">
           <div class="perk"><span>🚚</span><span>Free delivery on orders above ₹50,000</span></div>
@@ -248,7 +252,7 @@ function initProductDetailPage() {
   window.switchImage = function(index) {
     currentImgIndex = index;
     document.getElementById("main-product-img").src = product.images[index];
-    document.querySelectorAll(".thumb").forEach((t, i) => t.classList.toggle("active", i === index));
+    document.querySelectorAll(".product-thumb").forEach((t, i) => t.classList.toggle("active", i === index));
   };
 
   window.changeDetailQty = function(delta) {

@@ -123,37 +123,36 @@ function renderCartPage() {
   let subtotal = 0;
   let savings = 0;
 
-  container.innerHTML = cart.map(item => {
+  container.innerHTML = `<div class="cart-items-header">Your Cart Items</div>` + cart.map(item => {
     const product = getProductById(item.id);
     if (!product) return "";
     const lineTotal = product.price * item.qty;
     const lineSavings = (product.originalPrice - product.price) * item.qty;
+    const discount = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
     subtotal += lineTotal;
     savings += lineSavings;
 
     return `
       <div class="cart-item" data-id="${product.id}">
-        <div class="cart-item-img">
-          <img src="${product.image}" alt="${product.name}" />
-        </div>
-        <div class="cart-item-details">
-          <span class="cart-item-category">${product.category}</span>
-          <h3 class="cart-item-name">${product.name}</h3>
-          <div class="cart-item-pricing">
-            <span class="cart-item-price">${formatPrice(product.price)}</span>
-            <span class="cart-item-original">${formatPrice(product.originalPrice)}</span>
+        <img class="cart-item-img" src="${product.image}" alt="${product.name}" />
+        <div class="cart-item-info">
+          <div class="cart-item-name">${product.name}</div>
+          <div class="cart-item-meta">${product.category.charAt(0).toUpperCase() + product.category.slice(1)}</div>
+          <div style="display:flex;gap:8px;align-items:baseline;margin-top:4px;">
+            <span class="cart-item-price-main">${formatPrice(product.price)}</span>
+            <span class="cart-item-price-old">${formatPrice(product.originalPrice)}</span>
+            <span class="cart-item-savings">-${discount}%</span>
           </div>
+          <div class="cart-item-savings" style="margin-top:2px;">You save ${formatPrice(lineSavings)} on this item</div>
         </div>
         <div class="cart-item-controls">
+          <span class="item-total">${formatPrice(lineTotal)}</span>
           <div class="qty-control">
             <button class="qty-btn" onclick="changeQty(${product.id}, -1)">−</button>
-            <span class="qty-value">${item.qty}</span>
+            <span class="qty-display">${item.qty}</span>
             <button class="qty-btn" onclick="changeQty(${product.id}, 1)">+</button>
           </div>
-          <div class="cart-item-total">${formatPrice(lineTotal)}</div>
-          <button class="btn-remove" onclick="removeItem(${product.id})">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3,6 5,6 21,6"/><path d="M19,6l-1,14H6L5,6M10,11v6M14,11v6M9,6V4h6v2"/></svg>
-          </button>
+          <button class="cart-remove-btn" onclick="removeItem(${product.id})">Remove</button>
         </div>
       </div>
     `;
@@ -165,15 +164,15 @@ function renderCartPage() {
   if (summaryContainer) {
     summaryContainer.innerHTML = `
       <div class="summary-card">
-        <h2 class="summary-title">Order Summary</h2>
-        <div class="summary-row"><span>Subtotal (${getCartItemCount()} items)</span><span>${formatPrice(subtotal)}</span></div>
-        <div class="summary-row savings"><span>Your Savings</span><span>−${formatPrice(savings)}</span></div>
-        <div class="summary-row"><span>Shipping</span><span>${shipping === 0 ? '<span class="free-ship">FREE</span>' : formatPrice(shipping)}</span></div>
-        <div class="summary-divider"></div>
-        <div class="summary-row total"><span>Total</span><span>${formatPrice(total)}</span></div>
-        ${shipping > 0 ? `<p class="shipping-notice">Add ${formatPrice(50000 - subtotal)} more for FREE shipping</p>` : '<p class="shipping-notice free">🎉 You qualify for FREE shipping!</p>'}
+        <div class="summary-title">Price Details</div>
+        <div class="summary-row"><span>Price (${getCartItemCount()} items)</span><span>${formatPrice(subtotal + savings)}</span></div>
+        <div class="summary-row discount"><span>Discount</span><span style="color:var(--success)">− ${formatPrice(savings)}</span></div>
+        <div class="summary-row"><span>Delivery Charges</span><span>${shipping === 0 ? '<span style="color:var(--success);font-weight:600">FREE</span>' : formatPrice(shipping)}</span></div>
+        <div class="summary-row total"><span>Total Amount</span><span>${formatPrice(total)}</span></div>
+        ${savings > 0 ? `<div class="summary-savings-note">🎉 You will save ${formatPrice(savings)} on this order!</div>` : ""}
         <a href="checkout.html" class="btn-checkout">Proceed to Checkout →</a>
-        <a href="products.html" class="btn-continue-shop">← Continue Shopping</a>
+        <div class="secure-badges">🔒 Safe and Secure Payments. Easy Returns.</div>
+        <div style="text-align:center;margin-top:10px;"><a href="products.html" style="font-size:0.8rem;color:var(--accent);">← Continue Shopping</a></div>
       </div>
     `;
   }
